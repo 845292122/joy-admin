@@ -27,6 +27,10 @@ useEffect(() => {}, [])
 return ()
 ```
 
+## 图标
+
+https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Outlined
+
 ## Docker部署
 
 1. docker build -t react-admin:v0 .
