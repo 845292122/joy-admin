@@ -11,6 +11,9 @@
     "format": "prettier --write 'src/**/*.{js,ts,tsx}'"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/joy": "5.0.0-beta.51",
     "axios": "^1.7.7",
     "immer": "^10.1.1",
     "jotai": "^2.10.3",
