@@ -29,7 +29,8 @@ return ()
 
 ## 图标
 
-https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Outlined
+图标方案使用react-icons:
+https://react-icons.github.io/react-icons/
 
 ## Docker部署
 

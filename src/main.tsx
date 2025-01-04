@@ -9,7 +9,21 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <CssVarsProvider theme={extendTheme({ cssVarPrefix: '' })}>
       <CssBaseline />
-      <GlobalStyles styles={{}} />
+      <GlobalStyles
+        styles={{
+          ':root': {
+            '--Form-maxWidth': '800px',
+            '--Transition-duration': '0.4s'
+          },
+          svg: {
+            color: 'var(--Icon-color)',
+            margin: 'var(--Icon-margin)',
+            fontSize: 'var(--Icon-fontSize, 20px)',
+            width: '0.75em',
+            height: '0.75em'
+          }
+        }}
+      />
       <BrowserRouter>
         <AuthRouter>
           <Router />
