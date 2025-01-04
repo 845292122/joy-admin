@@ -26,8 +26,7 @@
     "baseUrl": "./",
     // 模块名到基于 baseUrl的路径映射的列表。
     "paths": {
-      "~/*": ["src/*"],
-      "@mui/material": ["./node_modules/@mui/joy"]
+      "~/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "vite.config.ts"],

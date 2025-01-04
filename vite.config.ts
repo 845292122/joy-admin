@@ -14,8 +14,7 @@ export default defineConfig((config: ConfigEnv): UserConfig => {
     base: env.VITE_APP_CONTEXT_PATH,
     resolve: {
       alias: {
-        '~': path.resolve(__dirname, 'src'),
-        '@mui/material': '@mui/joy'
+        '~': path.resolve(__dirname, 'src')
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
     },
