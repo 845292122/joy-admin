@@ -10,10 +10,18 @@ createRoot(document.getElementById('root')!).render(
     <CssVarsProvider theme={extendTheme({ cssVarPrefix: '' })}>
       <CssBaseline />
       <GlobalStyles
-        styles={{
+        styles={theme => ({
           ':root': {
             '--Form-maxWidth': '800px',
-            '--Transition-duration': '0.4s'
+            '--Transition-duration': '0.4s',
+            '--Header-height': '52px',
+            [theme.breakpoints.up('md')]: {
+              '--Header-height': '0px'
+            },
+            '--Sidebar-width': '220px',
+            [theme.breakpoints.up('lg')]: {
+              '--Sidebar-width': '240px'
+            }
           },
           svg: {
             color: 'var(--Icon-color)',
@@ -22,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
             width: '0.75em',
             height: '0.75em'
           }
-        }}
+        })}
       />
       <BrowserRouter>
         <AuthRouter>

@@ -1,22 +1,9 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormLabel,
-  IconButton,
-  IconButtonProps,
-  Input,
-  Link,
-  Stack,
-  Typography,
-  useColorScheme
-} from '@mui/joy'
+import { Box, Button, Checkbox, Divider, FormControl, FormLabel, IconButton, Input, Link, Stack, Typography } from '@mui/joy'
 import React from 'react'
-import { BsCupHotFill, BsFillMoonStarsFill, BsFillSunFill, BsGoogle } from 'react-icons/bs'
+import { BsCupHotFill, BsGoogle } from 'react-icons/bs'
 import loginLightAvif from '~/assets/images/login/login-light.avif'
 import loginDarkAvif from '~/assets/images/login/login-dark.avif'
+import ColorSchemeToggle from '~/components/ColorSchemeToggle'
 
 type FormElements = {
   email: HTMLInputElement
@@ -27,30 +14,6 @@ type FormElements = {
 type SignInFormElement = {
   readonly elements: FormElements
 } & HTMLFormElement
-
-function ColorSchemeToggle(props: IconButtonProps) {
-  const { onClick, ...other } = props
-  const { mode, setMode } = useColorScheme()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => setMounted(true), [])
-
-  return (
-    <IconButton
-      aria-label="toggle light/dark mode"
-      size="sm"
-      variant="outlined"
-      disabled={!mounted}
-      onClick={event => {
-        setMode(mode === 'light' ? 'dark' : 'light')
-        onClick?.(event)
-      }}
-      {...other}
-    >
-      {mode === 'light' ? <BsFillMoonStarsFill /> : <BsFillSunFill />}
-    </IconButton>
-  )
-}
 
 export default function Login() {
   return (
