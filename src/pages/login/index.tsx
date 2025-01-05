@@ -135,7 +135,7 @@ export default function Login() {
                 >
                   <FormControl required>
                     <FormLabel>用户名</FormLabel>
-                    <Input type="email" name="email" />
+                    <Input type="email" name="email" autoComplete="off" />
                   </FormControl>
                   <FormControl required>
                     <FormLabel>密 码</FormLabel>
