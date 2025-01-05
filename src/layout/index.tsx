@@ -4,7 +4,7 @@ import Header from './Header'
 import Sidebar from './Sidebar'
 import { BsFillMortarboardFill } from 'react-icons/bs'
 
-const Layout = () => {
+export default function Layout() {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <Header />
@@ -50,5 +50,3 @@ const Layout = () => {
     </Box>
   )
 }
-
-export default Layout
