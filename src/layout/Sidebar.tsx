@@ -16,6 +16,7 @@ import {
   Stack,
   Typography
 } from '@mui/joy'
+import { useAtomValue } from 'jotai'
 import React from 'react'
 import {
   BsBoxArrowRight,
@@ -30,7 +31,15 @@ import {
   BsX
 } from 'react-icons/bs'
 import ColorSchemeToggle from '~/components/ColorSchemeToggle'
+import { RouteType } from '~/router'
+import { permAtom } from '~/store'
 import { closeSidebar } from '~/utils'
+
+type MenuType = {
+  title: string
+  icon: React.ReactNode
+  children?: MenuType[]
+}
 
 function Toggler({
   defaultExpanded = false,
@@ -61,7 +70,66 @@ function Toggler({
   )
 }
 
+// TODO 动态渲染菜单
+function Menu() {
+  return (
+    <List
+      size="sm"
+      sx={{
+        gap: 1,
+        '--List-nestedInsetStart': '30px',
+        '--ListItem-radius': theme => theme.vars.radius.sm
+      }}
+    >
+      <ListItem>
+        <ListItemButton>
+          <BsMicrosoft />
+          <ListItemContent>
+            <Typography level="title-sm">Home</Typography>
+          </ListItemContent>
+        </ListItemButton>
+      </ListItem>
+
+      <ListItem nested>
+        <Toggler
+          renderToggle={({ open, setOpen }) => (
+            <ListItemButton onClick={() => setOpen(!open)}>
+              <BsCSquareFill />
+              <ListItemContent>
+                <Typography level="title-sm">Tasks</Typography>
+              </ListItemContent>
+              {open ? <BsChevronUp /> : <BsChevronDown />}
+            </ListItemButton>
+          )}
+        >
+          <List sx={{ gap: 0.5 }}>
+            <ListItem sx={{ mt: 0.5 }}>
+              <ListItemButton>All tasks</ListItemButton>
+            </ListItem>
+            <ListItem>
+              <ListItemButton>Backlog</ListItemButton>
+            </ListItem>
+            <ListItem>
+              <ListItemButton>In progress</ListItemButton>
+            </ListItem>
+            <ListItem>
+              <ListItemButton>Done</ListItemButton>
+            </ListItem>
+          </List>
+        </Toggler>
+      </ListItem>
+    </List>
+  )
+}
+
 export default function Sidebar() {
+  const permissions = useAtomValue(permAtom)
+
+  React.useEffect(() => {
+    // TODO 根据权限过滤菜单
+    const filterMenusByPermissions = (routes: RouteType[], permissions: string[]) => {}
+  }, [permissions])
+
   return (
     <Sheet
       sx={{
@@ -172,6 +240,8 @@ export default function Sidebar() {
             </Toggler>
           </ListItem>
         </List>
+
+        <Menu />
 
         <List
           size="sm"
