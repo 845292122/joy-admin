@@ -1,5 +1,5 @@
 import Layout from '~/layout'
-import Home from '~/pages/home'
+import Home from '~/pages/Home'
 import { RouteType } from '..'
 
 const baseRoutes: Array<RouteType> = [

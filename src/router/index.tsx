@@ -1,4 +1,4 @@
-import Login from '~/pages/login'
+import Login from '~/pages/Login'
 import { Navigate, useRoutes } from 'react-router-dom'
 
 export type RouteMetaType = {
