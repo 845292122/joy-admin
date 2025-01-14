@@ -35,10 +35,10 @@ import { RouteType } from '~/router'
 import { permAtom } from '~/store'
 import { closeSidebar } from '~/utils'
 
-type MenuType = {
-  title: string
+type MenuItem = {
+  label: string
   icon: React.ReactNode
-  children?: MenuType[]
+  subItems?: { label: string }[]
 }
 
 function Toggler({
@@ -70,8 +70,9 @@ function Toggler({
   )
 }
 
-// TODO 动态渲染菜单
-function Menu() {
+// * 菜单
+// TODO: 路径跳转
+function Menu({ menuItems }: { menuItems: MenuItem[] }) {
   return (
     <List
       size="sm"
@@ -81,46 +82,63 @@ function Menu() {
         '--ListItem-radius': theme => theme.vars.radius.sm
       }}
     >
-      <ListItem>
-        <ListItemButton>
-          <BsMicrosoft />
-          <ListItemContent>
-            <Typography level="title-sm">Home</Typography>
-          </ListItemContent>
-        </ListItemButton>
-      </ListItem>
-
-      <ListItem nested>
-        <Toggler
-          renderToggle={({ open, setOpen }) => (
-            <ListItemButton onClick={() => setOpen(!open)}>
-              <BsCSquareFill />
-              <ListItemContent>
-                <Typography level="title-sm">Tasks</Typography>
-              </ListItemContent>
-              {open ? <BsChevronUp /> : <BsChevronDown />}
-            </ListItemButton>
+      {menuItems.map((item, index) => (
+        <React.Fragment key={index}>
+          {item.subItems ? (
+            <ListItem nested>
+              <Toggler
+                renderToggle={({ open, setOpen }) => (
+                  <ListItemButton onClick={() => setOpen(!open)}>
+                    {item.icon}
+                    <ListItemContent>
+                      <Typography level="title-sm">{item.label}</Typography>
+                    </ListItemContent>
+                    {open ? <BsChevronUp /> : <BsChevronDown />}
+                  </ListItemButton>
+                )}
+              >
+                <List sx={{ gap: 0.5 }}>
+                  {item.subItems.map((subItem, subIndex) => (
+                    <ListItem key={subIndex} sx={{ mt: subIndex === 0 ? 0.5 : 0 }}>
+                      <ListItemButton>{subItem.label}</ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Toggler>
+            </ListItem>
+          ) : (
+            <ListItem>
+              <ListItemButton>
+                {item.icon}
+                <ListItemContent>
+                  <Typography level="title-sm">{item.label}</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
           )}
-        >
-          <List sx={{ gap: 0.5 }}>
-            <ListItem sx={{ mt: 0.5 }}>
-              <ListItemButton>All tasks</ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton>Backlog</ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton>In progress</ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton>Done</ListItemButton>
-            </ListItem>
-          </List>
-        </Toggler>
-      </ListItem>
+        </React.Fragment>
+      ))}
     </List>
   )
 }
+
+const testMenuItems: MenuItem[] = [
+  // 示例菜单项
+  {
+    label: 'Home',
+    icon: <BsMicrosoft />
+  },
+  {
+    label: 'Tasks',
+    icon: <BsCSquareFill />,
+    subItems: [{ label: 'All tasks' }, { label: 'Backlog' }, { label: 'In progress' }, { label: 'Done' }]
+  },
+  {
+    label: 'Tasksaa',
+    icon: <BsCSquareFill />,
+    subItems: [{ label: 'All tasksafdfd' }, { label: 'Backlogaaa' }, { label: 'In progress' }, { label: 'Done' }]
+  }
+]
 
 export default function Sidebar() {
   const permissions = useAtomValue(permAtom)
@@ -194,54 +212,7 @@ export default function Sidebar() {
           }
         }}
       >
-        <List
-          size="sm"
-          sx={{
-            gap: 1,
-            '--List-nestedInsetStart': '30px',
-            '--ListItem-radius': theme => theme.vars.radius.sm
-          }}
-        >
-          <ListItem>
-            <ListItemButton>
-              <BsMicrosoft />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <BsCSquareFill />
-                  <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
-                  </ListItemContent>
-                  {open ? <BsChevronUp /> : <BsChevronDown />}
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem>
-        </List>
-
-        <Menu />
+        <Menu menuItems={testMenuItems} />
 
         <List
           size="sm"
