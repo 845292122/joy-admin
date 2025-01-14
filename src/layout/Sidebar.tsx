@@ -17,28 +17,26 @@ import {
   Typography
 } from '@mui/joy'
 import { useAtomValue } from 'jotai'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   BsBoxArrowRight,
   BsChevronDown,
   BsChevronUp,
-  BsCSquareFill,
   BsEmojiGrin,
   BsFillNutFill,
   BsMessenger,
-  BsMicrosoft,
   BsSearch,
   BsX
 } from 'react-icons/bs'
 import ColorSchemeToggle from '~/components/ColorSchemeToggle'
-import { RouteType } from '~/router'
+import { RouteType, bizRoutes } from '~/router'
 import { permAtom } from '~/store'
 import { closeSidebar } from '~/utils'
 
 type MenuItem = {
   label: string
   icon: React.ReactNode
-  subItems?: { label: string }[]
+  children?: { label: string }[]
 }
 
 function Toggler({
@@ -84,7 +82,7 @@ function Menu({ menuItems }: { menuItems: MenuItem[] }) {
     >
       {menuItems.map((item, index) => (
         <React.Fragment key={index}>
-          {item.subItems ? (
+          {item.children ? (
             <ListItem nested>
               <Toggler
                 renderToggle={({ open, setOpen }) => (
@@ -98,7 +96,7 @@ function Menu({ menuItems }: { menuItems: MenuItem[] }) {
                 )}
               >
                 <List sx={{ gap: 0.5 }}>
-                  {item.subItems.map((subItem, subIndex) => (
+                  {item.children.map((subItem, subIndex) => (
                     <ListItem key={subIndex} sx={{ mt: subIndex === 0 ? 0.5 : 0 }}>
                       <ListItemButton>{subItem.label}</ListItemButton>
                     </ListItem>
@@ -122,30 +120,43 @@ function Menu({ menuItems }: { menuItems: MenuItem[] }) {
   )
 }
 
-const testMenuItems: MenuItem[] = [
-  // 示例菜单项
-  {
-    label: 'Home',
-    icon: <BsMicrosoft />
-  },
-  {
-    label: 'Tasks',
-    icon: <BsCSquareFill />,
-    subItems: [{ label: 'All tasks' }, { label: 'Backlog' }, { label: 'In progress' }, { label: 'Done' }]
-  },
-  {
-    label: 'Tasksaa',
-    icon: <BsCSquareFill />,
-    subItems: [{ label: 'All tasksafdfd' }, { label: 'Backlogaaa' }, { label: 'In progress' }, { label: 'Done' }]
-  }
-]
-
 export default function Sidebar() {
   const permissions = useAtomValue(permAtom)
+  const [menuList, setMenuList] = useState<MenuItem[]>([])
 
   React.useEffect(() => {
     // TODO 根据权限过滤菜单
-    const filterMenusByPermissions = (routes: RouteType[], permissions: string[]) => {}
+    const filterMenusByPermissions = (routes: RouteType[], permissions: string[]): MenuItem[] => {
+      return routes.flatMap(route => {
+        if (route.children) {
+          const filteredChildren = filterMenusByPermissions(route.children, permissions)
+          if (filteredChildren.length > 0 && route.meta?.key) {
+            return [
+              {
+                key: route.meta.key,
+                label: route.meta.title,
+                icon: route.meta.icon,
+                children: filteredChildren
+              }
+            ]
+          }
+          return filteredChildren
+        }
+        if (route.meta?.permission && permissions.includes(route.meta.permission) && !route.meta.hidden) {
+          return [
+            {
+              key: route.meta.key,
+              label: route.meta.title,
+              icon: route.meta.icon
+            }
+          ]
+        }
+        return []
+      })
+    }
+
+    const filteredMenuList = filterMenusByPermissions(bizRoutes, permissions)
+    setMenuList(filteredMenuList)
   }, [permissions])
 
   return (
@@ -212,7 +223,7 @@ export default function Sidebar() {
           }
         }}
       >
-        <Menu menuItems={testMenuItems} />
+        <Menu menuItems={menuList} />
 
         <List
           size="sm"

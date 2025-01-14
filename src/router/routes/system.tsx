@@ -3,10 +3,18 @@ import { RouteType } from '..'
 import Account from '~/pages/system/Account'
 import Perm from '~/pages/system/Perm'
 import OperLog from '~/pages/system/OperLog'
+import { BsCSquareFill } from 'react-icons/bs'
 
 const systemRoutes: Array<RouteType> = [
   {
     element: <Layout />,
+    meta: {
+      key: '/system',
+      title: '系统管理',
+      requireAuth: true,
+      permission: 'system',
+      icon: <BsCSquareFill />
+    },
     children: [
       {
         path: '/system/account',

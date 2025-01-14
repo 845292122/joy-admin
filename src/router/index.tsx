@@ -3,9 +3,11 @@ import { Navigate, useRoutes } from 'react-router-dom'
 
 export type RouteMetaType = {
   title: string
-  key?: string
+  key: string
   requireAuth?: boolean
   permission?: string
+  hidden?: boolean
+  icon?: React.ReactNode
 }
 
 export type RouteType = {
