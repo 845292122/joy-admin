@@ -3,7 +3,7 @@ import { routes, RouteType } from '..'
 import { useAtomValue } from 'jotai'
 import { permAtom, tokenAtom } from '~/store/auth.store'
 
-function findRoute(pathname: string, routes: Array<RouteType> = []): RouteType {
+export function findRoute(pathname: string, routes: Array<RouteType> = []): RouteType {
   let result: RouteType = {}
   for (const route of routes) {
     if (route.path === pathname) return route
