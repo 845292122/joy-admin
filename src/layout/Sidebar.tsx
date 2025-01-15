@@ -1,33 +1,21 @@
 import {
   Avatar,
   Box,
-  Button,
-  Card,
   Divider,
   IconButton,
   Input,
-  LinearProgress,
   List,
   ListItem,
   ListItemButton,
   listItemButtonClasses,
   ListItemContent,
   Sheet,
-  Stack,
   Typography
 } from '@mui/joy'
 import { useAtomValue } from 'jotai'
 import React, { useState } from 'react'
-import {
-  BsBoxArrowRight,
-  BsChevronDown,
-  BsChevronUp,
-  BsEmojiGrin,
-  BsFillNutFill,
-  BsMessenger,
-  BsSearch,
-  BsX
-} from 'react-icons/bs'
+import { BsBoxArrowRight, BsChevronDown, BsChevronUp, BsEmojiGrin, BsFillNutFill, BsSearch } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
 import ColorSchemeToggle from '~/components/ColorSchemeToggle'
 import { RouteType, bizRoutes } from '~/router'
 import { permAtom } from '~/store'
@@ -36,7 +24,8 @@ import { closeSidebar } from '~/utils'
 type MenuItem = {
   label: string
   icon: React.ReactNode
-  children?: { label: string }[]
+  path: string
+  children?: { label: string; path: string }[]
 }
 
 function Toggler({
@@ -68,9 +57,14 @@ function Toggler({
   )
 }
 
-// * 菜单
-// TODO: 路径跳转
+// * 侧边菜单
 function Menu({ menuItems }: { menuItems: MenuItem[] }) {
+  const navigate = useNavigate()
+
+  function navigateTo(path: string) {
+    navigate(path)
+  }
+
   return (
     <List
       size="sm"
@@ -98,7 +92,7 @@ function Menu({ menuItems }: { menuItems: MenuItem[] }) {
                 <List sx={{ gap: 0.5 }}>
                   {item.children.map((subItem, subIndex) => (
                     <ListItem key={subIndex} sx={{ mt: subIndex === 0 ? 0.5 : 0 }}>
-                      <ListItemButton>{subItem.label}</ListItemButton>
+                      <ListItemButton onClick={() => navigateTo(subItem.path)}>{subItem.label}</ListItemButton>
                     </ListItem>
                   ))}
                 </List>
@@ -106,7 +100,7 @@ function Menu({ menuItems }: { menuItems: MenuItem[] }) {
             </ListItem>
           ) : (
             <ListItem>
-              <ListItemButton>
+              <ListItemButton onClick={() => navigateTo(item.path)}>
                 {item.icon}
                 <ListItemContent>
                   <Typography level="title-sm">{item.label}</Typography>
@@ -133,9 +127,9 @@ export default function Sidebar() {
           if (filteredChildren.length > 0 && route.meta?.key) {
             return [
               {
-                key: route.meta.key,
                 label: route.meta.title,
                 icon: route.meta.icon,
+                path: route.path ?? '/',
                 children: filteredChildren
               }
             ]
@@ -145,7 +139,7 @@ export default function Sidebar() {
         if (route.meta?.permission && permissions.includes(route.meta.permission) && !route.meta.hidden) {
           return [
             {
-              key: route.meta.key,
+              path: route.path ?? '/',
               label: route.meta.title,
               icon: route.meta.icon
             }
@@ -205,7 +199,7 @@ export default function Sidebar() {
         <IconButton variant="soft" color="primary" size="sm">
           <BsEmojiGrin />
         </IconButton>
-        <Typography level="title-lg">Acme Co.</Typography>
+        <Typography level="title-lg">Admin Saas</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
 
@@ -231,37 +225,22 @@ export default function Sidebar() {
             mt: 'auto',
             flexGrow: 0,
             '--ListItem-radius': theme => theme.vars.radius.sm,
-            '--List-gap': '8px',
-            mb: 2
+            '--List-gap': '8px'
           }}
         >
-          <ListItem>
+          {/* <ListItem>
             <ListItemButton>
               <BsMessenger />
               Support
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem>
             <ListItemButton>
               <BsFillNutFill />
-              Settings
+              系统设置
             </ListItemButton>
           </ListItem>
         </List>
-
-        <Card invertedColors variant="soft" color="warning" size="sm" sx={{ boxShadow: 'none' }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography level="title-sm">Used space</Typography>
-            <IconButton size="sm">
-              <BsX />
-            </IconButton>
-          </Stack>
-          <Typography level="body-xs">Your team has used 80% of your available space. Need more?</Typography>
-          <LinearProgress variant="outlined" value={80} determinate sx={{ my: 1 }} />
-          <Button size="sm" variant="solid">
-            Upgrade plan
-          </Button>
-        </Card>
       </Box>
 
       <Divider />
