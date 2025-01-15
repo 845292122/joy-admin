@@ -7,7 +7,7 @@ import { CssBaseline, CssVarsProvider, extendTheme, GlobalStyles } from '@mui/jo
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CssVarsProvider theme={extendTheme({ cssVarPrefix: '' })}>
+    <CssVarsProvider theme={extendTheme()}>
       <CssBaseline />
       <GlobalStyles
         styles={theme => ({
