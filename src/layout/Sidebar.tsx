@@ -3,7 +3,6 @@ import {
   Box,
   Divider,
   IconButton,
-  Input,
   List,
   ListItem,
   ListItemButton,
@@ -14,7 +13,7 @@ import {
 } from '@mui/joy'
 import { useAtomValue } from 'jotai'
 import React, { useState } from 'react'
-import { BsBoxArrowRight, BsChevronDown, BsChevronUp, BsEmojiGrin, BsFillNutFill, BsSearch } from 'react-icons/bs'
+import { BsBoxArrowRight, BsChevronDown, BsChevronUp, BsEmojiGrin, BsFillNutFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import ColorSchemeToggle from '~/components/ColorSchemeToggle'
 import { RouteType, bizRoutes } from '~/router'
@@ -119,7 +118,7 @@ export default function Sidebar() {
   const [menuList, setMenuList] = useState<MenuItem[]>([])
 
   React.useEffect(() => {
-    // TODO 根据权限过滤菜单
+    // 根据权限过滤菜单
     const filterMenusByPermissions = (routes: RouteType[], permissions: string[]): MenuItem[] => {
       return routes.flatMap(route => {
         if (route.children) {
@@ -203,8 +202,6 @@ export default function Sidebar() {
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
 
-      <Input size="sm" startDecorator={<BsSearch />} placeholder="Search" />
-
       <Box
         sx={{
           minHeight: 0,
@@ -237,7 +234,7 @@ export default function Sidebar() {
           <ListItem>
             <ListItemButton>
               <BsFillNutFill />
-              系统设置
+              账户设置
             </ListItemButton>
           </ListItem>
         </List>

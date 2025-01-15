@@ -1,3 +1,5 @@
+import PageContainer from '~/components/PageContainer'
+
 export default function Account() {
-  return <div>Account</div>
+  return <PageContainer showBtn>account</PageContainer>
 }
