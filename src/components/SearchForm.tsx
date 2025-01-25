@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, FormControl, FormLabel, Input, Option, Select } from '@mui/joy'
+import { Box, Button, ButtonGroup, FormControl, FormLabel, IconButton, Input, Option, Select } from '@mui/joy'
 import React from 'react'
 import { BsFillMortarboardFill } from 'react-icons/bs'
 import { IoSearchCircleOutline } from 'react-icons/io5'
@@ -18,16 +18,16 @@ export type SearchFormItem = {
 
 export type SearchFormProps = {
   items: SearchFormItem[]
-  onSearch: (param: any) => void
+  onSearch: (param: unknown) => void
 }
 
 export default function SearchForm({ items, onSearch }: SearchFormProps) {
-  const [formState, setFormState] = React.useState<Record<string, any>>({})
+  const [formState, setFormState] = React.useState<Record<string, string>>({})
 
   // 更改表单状态
-  const handleChange = (name: string, value: any) => {
-    setFormState(prev => ({
-      ...prev,
+  const handleChange = (name: string, value: string) => {
+    setFormState(prevState => ({
+      ...prevState,
       [name]: value
     }))
   }
@@ -71,7 +71,12 @@ export default function SearchForm({ items, onSearch }: SearchFormProps) {
             />
           )}
           {item.type === 'select' && (
-            <Select size="sm" placeholder={item.label}>
+            <Select
+              size="sm"
+              placeholder={item.label}
+              value={formState[item.name] || ''}
+              onChange={(_event, value) => handleChange(item.name, value as string)}
+            >
               {item.options?.map(option => (
                 <Option key={option.value} value={option.value}>
                   {option.label}
