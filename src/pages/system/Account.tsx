@@ -2,7 +2,7 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
+  ButtonGroup,
   Chip,
   ColorPaletteProp,
   Divider,
@@ -27,8 +27,8 @@ import { BiArrowBack, BiCheck, BiLock } from 'react-icons/bi'
 import { BsKeyboard } from 'react-icons/bs'
 import { CgKeyboard, CgMore } from 'react-icons/cg'
 import { FaAutoprefixer } from 'react-icons/fa'
-import { IoSearchCircleOutline } from 'react-icons/io5'
 import PageContainer from '~/components/PageContainer'
+import SearchForm, { SearchFormItem } from '~/components/SearchForm'
 
 const rows = [
   {
@@ -230,52 +230,6 @@ function RowMenu() {
   )
 }
 
-function SearchArea() {
-  return (
-    <Box
-      className="SearchAndFilters-tabletUp"
-      sx={{
-        borderRadius: 'sm',
-        py: 2,
-        display: { xs: 'none', sm: 'flex' },
-        flexWrap: 'wrap',
-        gap: 1.5,
-        '& > *': {
-          minWidth: { xs: '120px', md: '160px' }
-        }
-      }}
-    >
-      <FormControl sx={{ flex: 1 }} size="sm">
-        <FormLabel>公司名称</FormLabel>
-        <Input size="sm" placeholder="输入公司名称以查询" startDecorator={<IoSearchCircleOutline />} />
-      </FormControl>
-
-      <FormControl size="sm">
-        <FormLabel>状态</FormLabel>
-        <Select size="sm" placeholder="全部" slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}>
-          <Option value={null}>全部</Option>
-          <Option value="0">未启用</Option>
-          <Option value="1">试用中</Option>
-          <Option value="2">已启用</Option>
-          <Option value="3">已到期</Option>
-        </Select>
-      </FormControl>
-
-      <FormControl size="sm">
-        <FormLabel>业务类型</FormLabel>
-        <Select size="sm" placeholder="全部">
-          <Option value={null}>全部</Option>
-          <Option value="cy">餐饮</Option>
-          <Option value="kq">口腔</Option>
-        </Select>
-      </FormControl>
-
-      <FormControl></FormControl>
-      <FormControl></FormControl>
-    </Box>
-  )
-}
-
 /**
  * 搜索区域
  *  company - input
@@ -284,12 +238,57 @@ function SearchArea() {
  * table区域
  */
 export default function Account() {
-  const [selected, setSelected] = React.useState<readonly string[]>([])
   const [order, setOrder] = React.useState('desc')
+  const searchFormItems: SearchFormItem[] = [
+    {
+      label: '公司名称',
+      name: 'company',
+      type: 'text'
+    },
+    {
+      label: '业务类型',
+      name: 'bizType',
+      type: 'select',
+      options: [
+        {
+          label: '餐饮',
+          value: 'cy'
+        },
+        {
+          label: '口腔',
+          value: 'kq'
+        }
+      ]
+    },
+    {
+      label: '状态',
+      name: 'status',
+      type: 'select',
+      options: [
+        {
+          label: '未启用',
+          value: '0'
+        },
+        {
+          label: '试用中',
+          value: '1'
+        },
+        {
+          label: '已启用',
+          value: '2'
+        },
+        {
+          label: '已到期',
+          value: '3'
+        }
+      ]
+    }
+  ]
+  const handleSearch = () => {}
 
   return (
     <PageContainer showBtn>
-      <SearchArea />
+      <SearchForm items={searchFormItems} onSearch={handleSearch} />
 
       <Sheet
         className="OrderTableContainer"
@@ -317,18 +316,6 @@ export default function Account() {
         >
           <thead>
             <tr>
-              <th style={{ width: 48, textAlign: 'center', padding: '12px 6px' }}>
-                <Checkbox
-                  size="sm"
-                  indeterminate={selected.length > 0 && selected.length !== rows.length}
-                  checked={selected.length === rows.length}
-                  onChange={event => {
-                    setSelected(event.target.checked ? rows.map(row => row.id) : [])
-                  }}
-                  color={selected.length > 0 || selected.length === rows.length ? 'primary' : undefined}
-                  sx={{ verticalAlign: 'text-bottom' }}
-                />
-              </th>
               <th style={{ width: 120, padding: '12px 6px' }}>
                 <Link
                   underline="none"
@@ -360,18 +347,6 @@ export default function Account() {
           <tbody>
             {[...rows].map(row => (
               <tr key={row.id}>
-                <td style={{ textAlign: 'center', width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? 'primary' : undefined}
-                    onChange={event => {
-                      setSelected(ids => (event.target.checked ? ids.concat(row.id) : ids.filter(itemId => itemId !== row.id)))
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
-                    sx={{ verticalAlign: 'text-bottom' }}
-                  />
-                </td>
                 <td>
                   <Typography level="body-xs">{row.id}</Typography>
                 </td>
