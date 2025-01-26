@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, FormControl, FormLabel, IconButton, Input, Option, Select } from '@mui/joy'
+import { Box, Button, ButtonGroup, FormControl, FormLabel, Input, Option, Select } from '@mui/joy'
 import React from 'react'
 import { BsFillMortarboardFill } from 'react-icons/bs'
 import { IoSearchCircleOutline } from 'react-icons/io5'
@@ -18,7 +18,7 @@ export type SearchFormItem = {
 
 export type SearchFormProps = {
   items: SearchFormItem[]
-  onSearch: (param: unknown) => void
+  onSearch: (param: Record<string, unknown>) => void
 }
 
 export default function SearchForm({ items, onSearch }: SearchFormProps) {
@@ -34,7 +34,15 @@ export default function SearchForm({ items, onSearch }: SearchFormProps) {
 
   // 重置事件
   const handleReset = () => {
-    setFormState({})
+    const emptyState = items.reduce(
+      (acc, item) => {
+        acc[item.name] = ''
+        return acc
+      },
+      {} as Record<string, string>
+    )
+
+    setFormState(emptyState)
   }
 
   // 搜索事件
@@ -67,7 +75,7 @@ export default function SearchForm({ items, onSearch }: SearchFormProps) {
               placeholder={item.placeholder ?? `输入${item.label}以查询`}
               startDecorator={<IoSearchCircleOutline />}
               value={formState[item.name]}
-              onChange={e => handleChange(item.name, e.target.value)}
+              onChange={_event => handleChange(item.name, _event.target.value)}
             />
           )}
           {item.type === 'select' && (
