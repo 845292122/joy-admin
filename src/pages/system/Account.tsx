@@ -2,22 +2,17 @@ import {
   Avatar,
   Box,
   Button,
-  ButtonGroup,
+  Checkbox,
   Chip,
   ColorPaletteProp,
   Divider,
   Dropdown,
-  FormControl,
-  FormLabel,
   IconButton,
   iconButtonClasses,
-  Input,
   Link,
   Menu,
   MenuButton,
   MenuItem,
-  Option,
-  Select,
   Sheet,
   Table,
   Typography
@@ -27,6 +22,7 @@ import { BiArrowBack, BiCheck, BiLock } from 'react-icons/bi'
 import { BsKeyboard } from 'react-icons/bs'
 import { CgKeyboard, CgMore } from 'react-icons/cg'
 import { FaAutoprefixer } from 'react-icons/fa'
+import DataTable from '~/components/DataTable'
 import PageContainer from '~/components/PageContainer'
 import SearchForm, { SearchFormItem } from '~/components/SearchForm'
 
@@ -238,6 +234,7 @@ function RowMenu() {
  * table区域
  */
 export default function Account() {
+  const [selected, setSelected] = React.useState<readonly string[]>([])
   const [order, setOrder] = React.useState('desc')
   const searchFormItems: SearchFormItem[] = [
     {
@@ -286,6 +283,32 @@ export default function Account() {
   ]
   const handleSearch = () => {}
 
+  const columns = [
+    {
+      title: 'Invoice',
+      dataIndex: 'id',
+      width: 120,
+      render: (value: string) => <Typography level="body-xs">{value}</Typography>
+    },
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      width: 140,
+      render: (value: string) => <Typography level="body-xs">{value}</Typography>
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: 140,
+      render: (value: string) => (
+        <Chip variant="soft" size="sm">
+          {value}
+        </Chip>
+      )
+    }
+  ]
+  const [selectedRows, setSelectedRows] = React.useState<any[]>([])
+
   return (
     <PageContainer showBtn>
       <SearchForm items={searchFormItems} onSearch={handleSearch} />
@@ -302,6 +325,15 @@ export default function Account() {
           minHeight: 0
         }}
       >
+        <DataTable
+          columns={columns}
+          dataSource={rows}
+          rowKey="id"
+          showCheckbox={true}
+          selectedRows={selectedRows}
+          onSelectChange={setSelectedRows}
+        />
+
         <Table
           aria-labelledby="tableTitle"
           stickyHeader
@@ -316,6 +348,18 @@ export default function Account() {
         >
           <thead>
             <tr>
+              <th style={{ width: 48, textAlign: 'center', padding: '12px 6px' }}>
+                <Checkbox
+                  size="sm"
+                  indeterminate={selected.length > 0 && selected.length !== rows.length}
+                  checked={selected.length === rows.length}
+                  onChange={event => {
+                    setSelected(event.target.checked ? rows.map(row => row.id) : [])
+                  }}
+                  color={selected.length > 0 || selected.length === rows.length ? 'primary' : undefined}
+                  sx={{ verticalAlign: 'text-bottom' }}
+                />
+              </th>
               <th style={{ width: 120, padding: '12px 6px' }}>
                 <Link
                   underline="none"
@@ -347,6 +391,18 @@ export default function Account() {
           <tbody>
             {[...rows].map(row => (
               <tr key={row.id}>
+                <td style={{ textAlign: 'center', width: 120 }}>
+                  <Checkbox
+                    size="sm"
+                    checked={selected.includes(row.id)}
+                    color={selected.includes(row.id) ? 'primary' : undefined}
+                    onChange={event => {
+                      setSelected(ids => (event.target.checked ? ids.concat(row.id) : ids.filter(itemId => itemId !== row.id)))
+                    }}
+                    slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
+                    sx={{ verticalAlign: 'text-bottom' }}
+                  />
+                </td>
                 <td>
                   <Typography level="body-xs">{row.id}</Typography>
                 </td>
